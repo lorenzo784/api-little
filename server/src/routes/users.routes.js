@@ -8,7 +8,7 @@ import { Privilege } from '../config/rbac.constants.js';
 
 const r = Router();
 
-r.get('/', authMiddleware, ctrl.list);
+r.get('/', ...authorizePermission(Privilege.USERS_SEE_ALL), ctrl.list);
 r.get('/:id', authMiddleware, ctrl.getById);
 r.post(
   '/',
