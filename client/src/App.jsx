@@ -4,13 +4,16 @@ import Users from './pages/Users';
 import Auth from './pages/Auth';
 import MainLayout from './layouts/MainLayout';
 import NoLayout from './layouts/NoLayout';
+import RequireAuth from './components/RequireAuth';
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
-        <Route index element={<Home />} />
-        <Route path="users" element={<Users />} />
+      <Route element={<RequireAuth />}>
+        <Route element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="users" element={<Users />} />
+        </Route>
       </Route>
 
       <Route element={<NoLayout />}>
