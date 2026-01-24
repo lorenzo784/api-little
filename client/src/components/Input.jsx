@@ -1,6 +1,6 @@
 export default function Input({
   label,
-  type = "text",
+  type = 'text',
   placeholder,
   value,
   onChange,

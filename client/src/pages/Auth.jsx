@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { api, authToken } from "../lib/api.js";
-import Input from "../components/Input";
+import { useState } from 'react';
+import { api, authToken } from '../lib/api.js';
+import Input from '../components/Input';
 
 export default function Auth() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
 
   const login = async () => {
@@ -42,19 +42,17 @@ export default function Auth() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <button
-              className="btn btn-primary w-full"
-              onClick={login}
-              disabled={loading}
-            >
+            <button className="btn btn-primary w-full" onClick={login} disabled={loading}>
               Iniciar sesión
             </button>
 
             <p className="text-center mt-2">
-              ¿No tienes cuenta? <a href="#" className="link link-primary">Registrarse</a>
+              ¿No tienes cuenta?{' '}
+              <a href="#" className="link link-primary">
+                Registrarse
+              </a>
             </p>
           </div>
-
         </div>
       </div>
     </div>
