@@ -1,58 +1,62 @@
-import { useState } from 'react';
-import { api, authToken } from '../lib/api.js';
+import { useState } from "react";
+import { api, authToken } from "../lib/api.js";
+import Input from "../components/Input";
 
 export default function Auth() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [token, setToken] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const signup = async () => {
-    const data = await api.auth.signup({ email, password, name });
-    authToken.set(data.token);
-    setToken(data.token);
-  };
   const login = async () => {
-    const data = await api.auth.login({ email, password });
-    authToken.set(data.token);
-    setToken(data.token);
+    try {
+      setLoading(true);
+      const data = await api.auth.login({ email, password });
+      authToken.set(data.token);
+      setToken(data.token);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="p-6 space-y-4">
-      <h2 className="text-xl font-semibold">Auth</h2>
-      <input
-        className="input input-bordered w-full"
-        placeholder="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className="input input-bordered w-full"
-        placeholder="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        className="input input-bordered w-full"
-        placeholder="name (signup)"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <div className="join">
-        <button className="btn btn-primary join-item" onClick={signup}>
-          Signup
-        </button>
-        <button className="btn btn-secondary join-item" onClick={login}>
-          Login
-        </button>
-      </div>
-      {token && (
-        <div className="alert alert-success">
-          <span>Token guardado en localStorage:</span> <code className="break-all">{token}</code>
+    <div className="min-h-screen flex items-center justify-center bg-base-200">
+      <div className="card w-full max-w-md shadow-xl bg-base-100">
+        <div className="card-body">
+          <h2 className="card-title text-2xl justify-center">Inicio de sesión</h2>
+
+          <div className="space-y-4 mt-4">
+            <Input
+              label="Email"
+              type="email"
+              placeholder="example@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <Input
+              label="Contraseña"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button
+              className="btn btn-primary w-full"
+              onClick={login}
+              disabled={loading}
+            >
+              Iniciar sesión
+            </button>
+
+            <p className="text-center mt-2">
+              ¿No tienes cuenta? <a href="#" className="link link-primary">Registrarse</a>
+            </p>
+          </div>
+
         </div>
-      )}
+      </div>
     </div>
   );
 }
