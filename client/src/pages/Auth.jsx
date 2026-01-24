@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { api, authToken } from '../lib/api.js';
 import Input from '../components/Input';
 import { useToast } from '../context/ToastContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export default function Auth() {
   const [errors, setErrors] = useState({});
 
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const login = async () => {
     try {
@@ -20,6 +22,7 @@ export default function Auth() {
 
       authToken.set(data.token);
       showToast('Login exitoso', 'success');
+      navigate('/', { replace: true });
     } catch (err) {
       const issues = err?.data?.issues;
 
