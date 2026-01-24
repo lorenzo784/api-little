@@ -38,3 +38,15 @@ export async function remove(req, res, next) {
     next(e);
   }
 }
+
+export async function update(req, res, next) {
+  try {
+    const { id } = idParamSchema.parse(req.params);
+    const userData = req.body;
+
+    const updatedUser = await usersService.update(id, userData);
+    res.json(updatedUser);
+  } catch (e) {
+    next(e);
+  }
+}

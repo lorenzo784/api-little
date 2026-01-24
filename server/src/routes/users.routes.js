@@ -17,5 +17,6 @@ r.post(
   ctrl.create
 );
 r.delete('/:id', ...authorizePermission(Privilege.USERS_DELETE), ctrl.remove);
+r.put('/:id', ...authorizePermission(Privilege.USERS_UPDATE), ctrl.update);
 
 export default r;

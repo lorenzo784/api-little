@@ -18,12 +18,9 @@ export default function Auth() {
 
       const data = await api.auth.login({ email, password });
 
-      console.log(data);
-
       authToken.set(data.token);
       showToast('Login exitoso', 'success');
     } catch (err) {
-      console.log(err);
       const issues = err?.data?.issues;
 
       if (issues) {

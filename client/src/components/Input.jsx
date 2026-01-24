@@ -15,13 +15,11 @@ export default function Input({ label, type = 'text', placeholder, value, onChan
         onChange={onChange}
       />
 
-      {error &&
-        (console.log(error),
-        (
-          <label className="label">
-            <span className="label-text-alt text-error">{error}</span>
-          </label>
-        ))}
+      {error && (
+        <label className="label">
+          <span className="label-text-alt text-error">{error}</span>
+        </label>
+      )}
     </div>
   );
 }

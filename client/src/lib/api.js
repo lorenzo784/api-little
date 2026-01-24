@@ -68,6 +68,10 @@ export const api = {
     getById: (id) => request(`/api/users/${id}`),
     create: (payload) => request('/api/users', { method: 'POST', body: payload }),
     remove: (id) => request(`/api/users/${id}`, { method: 'DELETE' }),
+    update: (id, payload) => request(`/api/users/${id}`, { method: 'PUT', body: payload }),
   },
   health: () => request('/health', { auth: false }),
+  roles: {
+    list: () => request('/api/roles'),
+  },
 };
