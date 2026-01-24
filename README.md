@@ -1,11 +1,11 @@
-# ExpressJS + Vite + React 
+# ExpressJS + Vite + React
 
 Este repositorio contiene una aplicacion con un backend en ExpressJS y un frontend en React (Vite).
 
 ## Requisitos Previos
 
--   [Node.js](https://nodejs.org/) (v18 o superior recomendado)
--   [pnpm](https://pnpm.io/installation) (Gestor de paquetes utilizado en este proyecto)
+- [Node.js](https://nodejs.org/) (v18 o superior recomendado)
+- [pnpm](https://pnpm.io/installation) (Gestor de paquetes utilizado en este proyecto)
 
 ## Instalación
 
@@ -56,8 +56,9 @@ pnpm dev
 ```
 
 Esto ejecutará:
--   **Server:** http://localhost:3000
--   **Client:** http://localhost:5173
+
+- **Server:** http://localhost:3000
+- **Client:** http://localhost:5173
 
 ### Producción
 
@@ -81,5 +82,5 @@ Para construir y correr la aplicación:
 
 ## Estructura del Proyecto
 
--   `client/`: Frontend (Vite, React, TailwindCSS, DaisyUI)
--   `server/`: Backend (Express, Prisma, SQL Server)
+- `client/`: Frontend (Vite, React, TailwindCSS, DaisyUI)
+- `server/`: Backend (Express, Prisma, SQL Server)

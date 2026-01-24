@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { RoleType, Privilege, ROLE_PERMISSIONS } from '../src/config/rbac.constants.js';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -49,16 +50,19 @@ async function main() {
   }
 
   const adminEmail = process.env.ADMIN_EMAIL;
+
   if (adminEmail) {
-    const user = await prisma.user.findUnique({ where: { email: adminEmail } });
-    const adminRole = rolesByName[RoleType.ADMIN];
-    if (user && adminRole) {
-      await prisma.userRole.upsert({
-        where: { userId_roleId: { userId: user.id, roleId: adminRole.id } },
-        update: {},
-        create: { userId: user.id, roleId: adminRole.id },
-      });
-    }
+    const hashedPassword = await bcrypt.hash('lopezlopez', 10);
+
+    await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: {},
+      create: {
+        email: adminEmail,
+        password: hashedPassword,
+        name: 'lorenzo',
+      },
+    });
   }
 }
 
