@@ -1,19 +1,42 @@
 import { useState } from 'react';
 import { api, authToken } from '../lib/api.js';
 import Input from '../components/Input';
+import { useToast } from '../context/ToastContext';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const { showToast } = useToast();
 
   const login = async () => {
     try {
       setLoading(true);
+      setErrors({});
+
       const data = await api.auth.login({ email, password });
+
+      console.log(data);
+
       authToken.set(data.token);
-      setToken(data.token);
+      showToast('Login exitoso', 'success');
+    } catch (err) {
+      console.log(err);
+      const issues = err?.data?.issues;
+
+      if (issues) {
+        const fieldErrors = {};
+        issues.forEach((i) => {
+          const field = i.path[0];
+          fieldErrors[field] = i.message;
+        });
+
+        setErrors(fieldErrors);
+        return;
+      }
+      showToast(err?.message || 'Error al iniciar sesión', 'error');
     } finally {
       setLoading(false);
     }
@@ -31,7 +54,11 @@ export default function Auth() {
               type="email"
               placeholder="example@gmail.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
             />
 
             <Input
@@ -39,11 +66,15 @@ export default function Auth() {
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              error={errors.password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrors((prev) => ({ ...prev, password: undefined }));
+              }}
             />
 
             <button className="btn btn-primary w-full" onClick={login} disabled={loading}>
-              Iniciar sesión
+              {loading ? 'Ingresando...' : 'Iniciar sesión'}
             </button>
 
             <p className="text-center mt-2">
