@@ -17,3 +17,13 @@ export async function login(req, res, next) {
     next(e);
   }
 }
+
+export async function refresh(req, res, next) {
+  try {
+    const { token } = req.body;
+    const result = await authService.refresh(token);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+}

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { api, authToken } from '../lib/api.js';
+import { api } from '../lib/api.js';
 import Input from '../components/Input';
 import { useToast } from '../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export default function Auth() {
 
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
 
   const login = async () => {
     try {
@@ -20,7 +22,8 @@ export default function Auth() {
 
       const data = await api.auth.login({ email, password });
 
-      authToken.set(data.token);
+      authLogin(data.accessToken);
+
       showToast('Login exitoso', 'success');
       navigate('/', { replace: true });
     } catch (err) {

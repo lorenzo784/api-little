@@ -22,7 +22,8 @@ export const authToken = {
   },
 };
 
-async function request(path, { method = 'GET', body, headers = {}, auth = true } = {}) {
+async function request(path, options = {}) {
+  const { method = 'GET', body, headers = {}, auth = true } = options;
   const h = { 'Content-Type': 'application/json', ...headers };
 
   if (auth) {
@@ -35,6 +36,28 @@ async function request(path, { method = 'GET', body, headers = {}, auth = true }
     headers: h,
     body: body ? JSON.stringify(body) : undefined,
   });
+
+  // Refresh token not saved
+
+  // if (res.status === 401 && auth) {
+  //   const refreshToken = localStorage.getItem('refresh_token');
+  //   if (refreshToken) {
+  //     const refreshRes = await fetch(`${API_BASE}/api/auth/refresh`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ token: refreshToken }),
+  //     });
+  //     if (refreshRes.ok) {
+  //       const { accessToken } = await refreshRes.json();
+  //       authToken.set(accessToken);
+  //       return request(path, options);
+  //     } else {
+  //       authToken.clear();
+  //       localStorage.removeItem('refresh_token');
+  //       throw new Error('Sesion expirada, por favor logueate de nuevo');
+  //     }
+  //   }
+  // }
 
   const contentType = res.headers.get('content-type') || '';
   const data = contentType.includes('application/json') ? await res.json() : await res.text();
