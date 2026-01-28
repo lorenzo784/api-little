@@ -22,7 +22,7 @@ export default function Auth() {
 
       const data = await api.auth.login({ email, password });
 
-      authLogin(data.accessToken);
+      authLogin(data.accessToken, data.refreshToken);
 
       showToast('Login exitoso', 'success');
       navigate('/', { replace: true });

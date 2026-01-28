@@ -39,31 +39,43 @@ async function main() {
     }
   }
 
-  const roleUser = rolesByName[RoleType.USER];
-  const users = await prisma.user.findMany({ select: { id: true } });
-  for (const u of users) {
-    await prisma.userRole.upsert({
-      where: { userId_roleId: { userId: u.id, roleId: roleUser.id } },
-      update: {},
-      create: { userId: u.id, roleId: roleUser.id },
-    });
-  }
 
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com';
+  const adminPassword = process.env.ADMIN_PASSWORD || '12345678';
 
   if (adminEmail) {
-    const hashedPassword = await bcrypt.hash('lopezlopez', 10);
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
-    await prisma.user.upsert({
+    const adminUser = await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
       create: {
         email: adminEmail,
         password: hashedPassword,
-        name: 'lorenzo',
+        name: 'admin',
       },
     });
+
+    const adminRole = rolesByName[RoleType.ADMIN];
+
+    if (adminRole) {
+      await prisma.userRole.upsert({
+        where: {
+          userId_roleId: {
+            userId: adminUser.id,
+            roleId: adminRole.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: adminUser.id,
+          roleId: adminRole.id,
+        },
+      });
+    }
   }
+
+  console.log('Seed completed successfully');
 }
 
 main()

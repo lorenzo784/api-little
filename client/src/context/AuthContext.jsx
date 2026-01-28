@@ -1,25 +1,31 @@
-import { createContext, useContext, useState } from 'react';
-import { authToken } from '../lib/api';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { access, setSessionExpiredHandler } from '../lib/api';
+
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(authToken.get());
+  const [accessToken, setAccessToken] = useState(access.get());
 
-  const login = (token) => {
-    authToken.set(token);
-    setToken(token);
+  const login = (accessToken) => {
+    access.set(accessToken);
+    setAccessToken(accessToken);
   };
 
   const logout = () => {
-    authToken.clear();
-    setToken('');
+    access.clear();
+    setAccessToken('');
   };
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!accessToken;
+
+
+  useEffect(() => {
+    setSessionExpiredHandler(logout);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ accessToken, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

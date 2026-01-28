@@ -1,23 +1,50 @@
 const API_BASE = '';
 
-const tokenKey = 'auth_token';
+const accessToken = 'access_token';
+const refreshToken = 'refresh_token';
 
-export const authToken = {
+let onSessionExpired = null;
+
+export const setSessionExpiredHandler = (fn) => {
+  onSessionExpired = fn;
+};
+
+export const access = {
   get() {
     try {
-      return localStorage.getItem(tokenKey) || '';
+      return localStorage.getItem(accessToken) || '';
     } catch {
       return '';
     }
   },
   set(token) {
     try {
-      localStorage.setItem(tokenKey, token);
+      localStorage.setItem(accessToken, token);
     } catch {}
   },
   clear() {
     try {
-      localStorage.removeItem(tokenKey);
+      localStorage.removeItem(accessToken);
+    } catch {}
+  },
+};
+
+export const refresh = {
+  get() {
+    try {
+      return localStorage.getItem(refreshToken) || '';
+    } catch {
+      return '';
+    }
+  },
+  set(token) {
+    try {
+      localStorage.setItem(refreshToken, token);
+    } catch {}
+  },
+  clear() {
+    try {
+      localStorage.removeItem(refreshToken);
     } catch {}
   },
 };
@@ -27,7 +54,7 @@ async function request(path, options = {}) {
   const h = { 'Content-Type': 'application/json', ...headers };
 
   if (auth) {
-    const token = authToken.get();
+    const token = access.get();
     if (token) h.Authorization = `Bearer ${token}`;
   }
 
@@ -36,6 +63,12 @@ async function request(path, options = {}) {
     headers: h,
     body: body ? JSON.stringify(body) : undefined,
   });
+
+  if (res.status === 401 && auth) {
+    access.clear();
+    onSessionExpired?.();
+    throw new Error('SESSION_EXPIRED');
+  }
 
   // Refresh token not saved
 
