@@ -28,7 +28,12 @@ app.use(
   })
 );
 
-app.use(cors());
+app.use(
+  cors({
+    origin: env.CORS_ORIGIN,
+  })
+);
+
 app.use(express.json());
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
