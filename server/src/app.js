@@ -28,10 +28,12 @@ const app = express();
 //   })
 // );
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
@@ -42,7 +44,7 @@ app.use('/api', router);
 app.get('/', (_req, res) => {
   res.status(200).json({
     status: 200,
-    message: 'Server is running successfully!'
+    message: 'Server is running successfully!',
   });
 });
 
@@ -50,7 +52,7 @@ app.use((req, res, next) => {
   res.status(404).json({
     status: 404,
     error: 'Route not found',
-    path: req.originalUrl
+    path: req.originalUrl,
   });
 });
 
