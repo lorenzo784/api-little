@@ -3,15 +3,15 @@ export default function Modal({
   title,
   children,
   onClose,
-  onSave, // para formulario o confirmación
+  onSave,
   saveText = 'Guardar',
-  type = 'form', // "form" o "confirm"
+  type = 'form',
   cancelText = 'Cancelar',
 }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-base-100 rounded-lg shadow-lg w-full max-w-md p-6 relative">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">{title}</h3>
