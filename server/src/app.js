@@ -13,26 +13,25 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(
-  helmet({
-    crossOriginOpenerPolicy: false,
-    crossOriginResourcePolicy: false,
-    originAgentCluster: false,
-    strictTransportSecurity: false,
-    contentSecurityPolicy: {
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        'upgrade-insecure-requests': null,
-      },
-    },
-  })
-);
+// app.use(
+//   helmet({
+//     crossOriginOpenerPolicy: false,
+//     crossOriginResourcePolicy: false,
+//     originAgentCluster: false,
+//     strictTransportSecurity: false,
+//     contentSecurityPolicy: {
+//       directives: {
+//         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+//         'upgrade-insecure-requests': null,
+//       },
+//     },
+//   })
+// );
 
-app.use(
-  cors({
-    origin: env.CORS_ORIGIN,
-  })
-);
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
@@ -40,10 +39,19 @@ app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api', router);
 
-app.use(express.static(path.join(__dirname, '../../client/dist')));
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: 'Server is running successfully!'
+  });
+});
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: 404,
+    error: 'Route not found',
+    path: req.originalUrl
+  });
 });
 
 app.use(notFound);
