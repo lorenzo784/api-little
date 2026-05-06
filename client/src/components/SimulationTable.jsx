@@ -58,6 +58,7 @@ const SimulationTable = ({ simulations, onView, onExport }) => {
               <th>Lambda (λ)</th>
               <th>Mu (μ)</th>
               <th>Ganancia</th>
+              <th>Margen</th>
               <th>Casos</th>
               <th className="text-center">Acciones</th>
             </tr>
@@ -75,6 +76,11 @@ const SimulationTable = ({ simulations, onView, onExport }) => {
                 <td className="font-bold text-success">
                   {sim.resultadosFinancieros?.[0] 
                     ? `$${sim.resultadosFinancieros[0].ganancia.toLocaleString()}`
+                    : '-'}
+                </td>
+                <td>
+                  {sim.resultadosFinancieros?.[0] 
+                    ? <div className="badge badge-sm badge-outline">{(sim.resultadosFinancieros[0].margen * 100).toFixed(1)}%</div>
                     : '-'}
                 </td>
                 <td>

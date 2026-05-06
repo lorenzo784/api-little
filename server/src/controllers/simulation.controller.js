@@ -88,7 +88,9 @@ export const exportToExcel = async (req, res) => {
       'Tiempo Fin': cli.tiempoFin,
       'Tiempo Espera': cli.tiempoEspera,
       'Tiempo Servicio': cli.tiempoServicio,
+      'Productos': cli.productos || '-',
     }));
+
 
     // Create workbook
     const wb = xlsx.utils.book_new();

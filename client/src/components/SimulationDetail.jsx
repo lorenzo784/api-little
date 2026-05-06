@@ -118,7 +118,11 @@ const SimulationDetail = ({ simulation, onBack }) => {
                       <td className="text-error">${res.costosFijos.toLocaleString()}</td>
                       <td className="font-black text-lg">${res.ganancia.toLocaleString()}</td>
                       <td>
-                        <div className="badge badge-outline">{(res.margen * 100).toFixed(1)}%</div>
+                        <div className="badge badge-outline">
+                          {res.ingresos > 0 
+                            ? `${(res.margen * 100).toFixed(1)}%` 
+                            : '0.0%'}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -175,19 +179,21 @@ const SimulationDetail = ({ simulation, onBack }) => {
           <div className="overflow-x-auto">
             <table className="table table-zebra table-compact w-full">
               <thead>
-                <tr>
-                  <th>Cliente #</th>
-                  <th>Llegada</th>
-                  <th>Inicio Serv.</th>
-                  <th>Fin Serv.</th>
-                  <th>Espera</th>
-                  <th>Servicio</th>
-                </tr>
+                  <tr>
+                    <th>Cliente #</th>
+                    <th>Productos</th>
+                    <th>Llegada</th>
+                    <th>Inicio Serv.</th>
+                    <th>Fin Serv.</th>
+                    <th>Espera</th>
+                    <th>Servicio</th>
+                  </tr>
               </thead>
               <tbody>
                 {currentClients.map((cli) => (
                   <tr key={cli.id}>
                     <td className="font-bold">{cli.clienteNumero}</td>
+                    <td className="italic opacity-70">{cli.productos || 'N/A'}</td>
                     <td>{cli.tiempoLlegada.toFixed(2)}</td>
                     <td>{cli.tiempoInicio.toFixed(2)}</td>
                     <td>{cli.tiempoFin.toFixed(2)}</td>

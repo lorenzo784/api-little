@@ -108,9 +108,11 @@ model ClienteDetalle {
   tiempoFin     Float      @map("tiempo_fin")
   tiempoEspera  Float      @map("tiempo_espera")
   tiempoServicio Float     @map("tiempo_servicio")
+  productos     String?    @map("productos")
 
   @@map("clientes_detalle")
 }
+
 
 model CasoAleatorio {
   id            Int        @id @default(autoincrement())
