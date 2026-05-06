@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -59,4 +59,38 @@ model RolePermission {
   updatedAt    DateTime @updatedAt
 
   @@id([roleId, permissionId])
+}
+
+model Simulacion {
+  id                 Int      @id @default(autoincrement())
+  fecha              DateTime @default(now())
+  identificador_sim  String
+  lambd              Float
+  mu                 Float
+  s                  Int
+  tiempo_sim         Float
+  wq                 Float
+  w                  Float
+  lq                 Float
+  l                  Float
+  rho                Float
+
+  casosAleatorios    CasoAleatorio[]
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model CasoAleatorio {
+  id             Int      @id @default(autoincrement())
+  simulacionId   Int
+  simulacion     Simulacion @relation(fields: [simulacionId], references: [id], onDelete: Cascade)
+  tipo           String
+  idx            Int
+  valor          Float
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([simulacionId])
 }
