@@ -64,33 +64,65 @@ model RolePermission {
 model Simulacion {
   id                 Int      @id @default(autoincrement())
   fecha              DateTime @default(now())
-  identificador_sim  String
+  identificador_sim  String   @unique @map("identificador_sim")
   lambd              Float
   mu                 Float
   s                  Int
-  tiempo_sim         Float
+  tiempo_sim         Float    @map("tiempo_sim")
   wq                 Float
   w                  Float
   lq                 Float
   l                  Float
   rho                Float
 
-  casosAleatorios    CasoAleatorio[]
+  resultadosFinancieros ResultadoFinanciero[]
+  clientesDetalle       ClienteDetalle[]
+  casosAleatorios       CasoAleatorio[]
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("simulaciones")
+}
+
+model ResultadoFinanciero {
+  id            Int        @id @default(autoincrement())
+  simulacionId  Int        @map("simulacion_id")
+  simulacion    Simulacion @relation(fields: [simulacionId], references: [id], onDelete: Cascade)
+  ingresos      Float
+  costosVar     Float      @map("costos_var")
+  costosFijos   Float      @map("costos_fijos")
+  ganancia      Float
+  margen        Float
+
+  @@map("resultados_financieros")
+}
+
+model ClienteDetalle {
+  id            Int        @id @default(autoincrement())
+  simulacionId  Int        @map("simulacion_id")
+  simulacion    Simulacion @relation(fields: [simulacionId], references: [id], onDelete: Cascade)
+  clienteNumero Int        @map("cliente_numero")
+  tiempoLlegada Float      @map("tiempo_llegada")
+  tiempoInicio  Float      @map("tiempo_inicio")
+  tiempoFin     Float      @map("tiempo_fin")
+  tiempoEspera  Float      @map("tiempo_espera")
+  tiempoServicio Float     @map("tiempo_servicio")
+
+  @@map("clientes_detalle")
 }
 
 model CasoAleatorio {
-  id             Int      @id @default(autoincrement())
-  simulacionId   Int
-  simulacion     Simulacion @relation(fields: [simulacionId], references: [id], onDelete: Cascade)
-  tipo           String
-  idx            Int
-  valor          Float
+  id            Int        @id @default(autoincrement())
+  simulacionId  Int        @map("simulacion_id")
+  simulacion    Simulacion @relation(fields: [simulacionId], references: [id], onDelete: Cascade)
+  tipo          String
+  idx           Int
+  valor         Float
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @default(now()) @updatedAt @map("updated_at")
 
   @@index([simulacionId])
+  @@map("casos_aleatorios")
 }
